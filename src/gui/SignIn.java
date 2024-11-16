@@ -6,6 +6,8 @@ package gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
 import javax.swing.JOptionPane;
+import java.sql.ResultSet;
+import model.MySql;
 
 /**
  *
@@ -121,6 +123,26 @@ public class SignIn extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this ,"Please Enter Email", "Warning", JOptionPane.WARNING_MESSAGE);
         }else if(password.isEmpty()){
             JOptionPane.showMessageDialog(this,"Please Enter Password","Warning",JOptionPane.WARNING_MESSAGE);
+        }else if(!email.matches("^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$")){
+            JOptionPane.showMessageDialog(this,"Please Enter valid Email","Warning",JOptionPane.WARNING_MESSAGE);
+        }else{
+            try{
+                ResultSet resultset = MySql.executeSearch("SELECT * FROM `employee` WHERE `email` = '"+email+"' AND `password` = '"+password+"' ");
+
+                if(resultset.next()){
+                    String firstName = resultset.getString("first_name");
+                    String lastName = resultset.getString("last_name");
+                
+                    Home home = new Home(email);
+                    home.setVisible(true);
+                    this.dispose();
+                }else{
+                    JOptionPane.showMessageDialog(this,"Please Enter Correct Email Or Password","Warning",JOptionPane.WARNING_MESSAGE);
+                }
+                
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
