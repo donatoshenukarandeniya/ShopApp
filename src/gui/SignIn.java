@@ -5,6 +5,7 @@
 package gui;
 
 import com.formdev.flatlaf.FlatDarkLaf;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -50,6 +51,11 @@ public class SignIn extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jButton1.setText("Sign In");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,6 +112,17 @@ public class SignIn extends javax.swing.JFrame {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String email = jTextField1.getText();
+        String password = String.valueOf(jPasswordField1.getPassword());
+        
+        if(email.isEmpty()){
+            JOptionPane.showMessageDialog(this ,"Please Enter Email", "Warning", JOptionPane.WARNING_MESSAGE);
+        }else if(password.isEmpty()){
+            JOptionPane.showMessageDialog(this,"Please Enter Password","Warning",JOptionPane.WARNING_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
