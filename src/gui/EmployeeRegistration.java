@@ -434,6 +434,11 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
         String type = String.valueOf(jTable1.getValueAt(row, 7));
         jComboBox2.setSelectedItem(type);
+        
+        if(evt.getClickCount() == 2){
+            AddressView addressview = new AddressView();
+            addressview.setVisible(true);
+        }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
