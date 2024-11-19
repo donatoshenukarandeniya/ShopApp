@@ -170,6 +170,11 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
         jButton2.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jButton2.setText("Update Account");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setFont(new java.awt.Font("Poppins", 0, 12)); // NOI18N
         jButton3.setText("Reset");
@@ -349,85 +354,153 @@ public class EmployeeRegistration extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please Enter Email", "Warning", JOptionPane.WARNING_MESSAGE);
         } else if (!email.matches("^(?=.{1,64}@)[\\p{L}0-9_-]+(\\.[\\p{L}0-9_-]+)*@[^-][\\p{L}0-9-]+(\\.[\\p{L}0-9-]+)*(\\.[\\p{L}]{2,})$")) {
             JOptionPane.showMessageDialog(this, "Please Enter Valid Email", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(firstName.isEmpty()){
+        } else if (firstName.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Please Enter First Name", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(lastName.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Please Enter Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(nic.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(nic.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(mobile.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Please Enter Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(!mobile.matches("^07[01245678]{1}[0-9]{7}$")){
-             JOptionPane.showMessageDialog(this, "Please Enter Valid Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(password.isEmpty()){
-             JOptionPane.showMessageDialog(this, "Please Enter Password", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(gender.equals("Select")){
-             JOptionPane.showMessageDialog(this, "Please Select Gender", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else if(type.equals("Select")){
-             JOptionPane.showMessageDialog(this, "Please Select Type", "Warning", JOptionPane.WARNING_MESSAGE);
-        }else{
-            
-            try{
-                ResultSet resultSet = MySql.executeSearch("SELECT * FROM `employee` WHERE `email` = '"+email+"' OR `nic` = '"+nic+"' OR `mobile` = '"+mobile+"' ");
-                
-                if(resultSet.next()){
-                     JOptionPane.showMessageDialog(this, "THis Employee Already Registed", "Warning", JOptionPane.WARNING_MESSAGE);
-                }else{
+        } else if (lastName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (nic.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (nic.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (mobile.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (!mobile.matches("^07[01245678]{1}[0-9]{7}$")) {
+            JOptionPane.showMessageDialog(this, "Please Enter Valid Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Password", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (gender.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please Select Gender", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (type.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please Select Type", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+
+            try {
+                ResultSet resultSet = MySql.executeSearch("SELECT * FROM `employee` WHERE `email` = '" + email + "' OR `nic` = '" + nic + "' OR `mobile` = '" + mobile + "' ");
+
+                if (resultSet.next()) {
+                    JOptionPane.showMessageDialog(this, "THis Employee Already Registed", "Warning", JOptionPane.WARNING_MESSAGE);
+                } else {
                     Date date = new Date();
                     SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
-                    
+
                     MySql.executeIUD("INSERT INTO `employee` (`email`,`password`,`first_name`,`last_name`,`nic`,`mobile`,`date_register`,`employee_type_id`,`gender_id`) "
-                            + "VALUES('"+email+"' , '"+password+"', '"+firstName+"', '"+lastName+"', '"+nic+"' , '"+mobile+"' , '"+sdf.format(date)+"' ,"
-                            + " '"+typeMap.get(type)+"' , '"+genderMap.get(gender)+"')");
-                    
+                            + "VALUES('" + email + "' , '" + password + "', '" + firstName + "', '" + lastName + "', '" + nic + "' , '" + mobile + "' , '" + sdf.format(date) + "' ,"
+                            + " '" + typeMap.get(type) + "' , '" + genderMap.get(gender) + "')");
+
                     loadEmployee();
                     reset();
                 }
-            }catch(Exception e){
-                
+            } catch (Exception e) {
+
                 e.printStackTrace();
-                
+
             }
-            
+
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        jTextField1.setEnabled(true);
+        jTable1.clearSelection();
         reset();
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        
-        int row  = jTable1.getSelectedRow();
-        
+
+        int row = jTable1.getSelectedRow();
+
         String email = String.valueOf(jTable1.getValueAt(row, 0));
         jTextField1.setText(email);
-        jTextField1.setEnabled(FA
-        
+        jTextField1.setEnabled(false);
+
         String firstName = String.valueOf(jTable1.getValueAt(row, 1));
         jTextField2.setText(firstName);
-        
+
         String lastName = String.valueOf(jTable1.getValueAt(row, 2));
         jTextField3.setText(lastName);
-        
+
         String nic = String.valueOf(jTable1.getValueAt(row, 3));
         jTextField4.setText(nic);
-        
+
         String mobile = String.valueOf(jTable1.getValueAt(row, 4));
         jTextField5.setText(mobile);
-        
+
         String password = String.valueOf(jTable1.getValueAt(row, 5));
         jPasswordField1.setText(password);
-        
+
         String gender = String.valueOf(jTable1.getValueAt(row, 6));
         jComboBox1.setSelectedItem(gender);
-        
+
         String type = String.valueOf(jTable1.getValueAt(row, 7));
         jComboBox2.setSelectedItem(type);
     }//GEN-LAST:event_jTable1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        String email = jTextField1.getText();
+        String firstName = jTextField2.getText();
+        String lastName = jTextField3.getText();
+        String nic = jTextField4.getText();
+        String mobile = jTextField5.getText();
+        String password = String.valueOf(jPasswordField1.getPassword());
+        String gender = String.valueOf(jComboBox1.getSelectedItem());
+        String type = String.valueOf(jComboBox2.getSelectedItem());
+
+        if (firstName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter First Name", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (lastName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (nic.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (nic.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (mobile.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (!mobile.matches("^07[01245678]{1}[0-9]{7}$")) {
+            JOptionPane.showMessageDialog(this, "Please Enter Valid Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (password.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please Enter Password", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (gender.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please Select Gender", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else if (type.equals("Select")) {
+            JOptionPane.showMessageDialog(this, "Please Select Type", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+
+            try {
+                ResultSet resultSet = MySql.executeSearch("SELECT * FROM `employee` WHERE `nic` = '" + nic + "' OR `mobile` = '" + mobile + "' ");
+                boolean canUpdate = false;
+                
+                if (resultSet.next()) {
+
+                    if (!resultSet.getString("email").equals(email)) {
+                        JOptionPane.showMessageDialog(this, "This Employee Mobile Number and NIC already Registed", "Warning", JOptionPane.WARNING_MESSAGE);
+
+                    } else {
+                        canUpdate = true;
+                    }
+
+                } else {
+                    canUpdate = true;
+                }
+
+                if (canUpdate) {
+                    MySql.executeIUD("UPDATE `employee` SET `password` = '" + password + "' , `first_name` = '" + firstName + "' , "
+                            + "`last_name` = '" + lastName + "' , `nic` = '" + nic + "' , `mobile` = '" + mobile + "' , `employee_type_id` = '" + typeMap.get(type) + "' , "
+                            + "`gender_id` = '" + genderMap.get(gender) + "' WHERE `email` = '"+email+"' ");
+                    
+                    
+                    loadEmployee();
+                    reset();
+                }
+            } catch (Exception e) {
+
+                e.printStackTrace();
+
+            }
+
+        }
+
+    }//GEN-LAST:event_jButton2ActionPerformed
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
@@ -478,6 +551,5 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         jPasswordField1.setText("");
         jComboBox1.setSelectedIndex(0);
         jComboBox2.setSelectedIndex(0);
-        jTable1.clearSelection();
     }
 }
