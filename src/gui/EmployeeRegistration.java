@@ -441,6 +441,7 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         if (evt.getClickCount() == 2) {
             AddressView addressview = new AddressView(this,true,email1);
             addressview.setVisible(true);
+            
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
