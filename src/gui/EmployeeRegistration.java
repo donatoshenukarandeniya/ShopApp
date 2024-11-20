@@ -434,76 +434,86 @@ public class EmployeeRegistration extends javax.swing.JFrame {
 
         String type = String.valueOf(jTable1.getValueAt(row, 7));
         jComboBox2.setSelectedItem(type);
-        
-        if(evt.getClickCount() == 2){
-            AddressView addressview = new AddressView();
+
+        int row1 = jTable1.getSelectedRow();
+        String email1 = String.valueOf(jTable1.getValueAt(row1, 0));
+
+        if (evt.getClickCount() == 2) {
+            AddressView addressview = new AddressView(email1);
             addressview.setVisible(true);
         }
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        String email = jTextField1.getText();
-        String firstName = jTextField2.getText();
-        String lastName = jTextField3.getText();
-        String nic = jTextField4.getText();
-        String mobile = jTextField5.getText();
-        String password = String.valueOf(jPasswordField1.getPassword());
-        String gender = String.valueOf(jComboBox1.getSelectedItem());
-        String type = String.valueOf(jComboBox2.getSelectedItem());
 
-        if (firstName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter First Name", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (lastName.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (nic.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (nic.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (mobile.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (!mobile.matches("^07[01245678]{1}[0-9]{7}$")) {
-            JOptionPane.showMessageDialog(this, "Please Enter Valid Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (password.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Please Enter Password", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (gender.equals("Select")) {
-            JOptionPane.showMessageDialog(this, "Please Select Gender", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else if (type.equals("Select")) {
-            JOptionPane.showMessageDialog(this, "Please Select Type", "Warning", JOptionPane.WARNING_MESSAGE);
-        } else {
+        int row = jTable1.getSelectedRow();
 
-            try {
-                ResultSet resultSet = MySql.executeSearch("SELECT * FROM `employee` WHERE `nic` = '" + nic + "' OR `mobile` = '" + mobile + "' ");
-                boolean canUpdate = false;
-                
-                if (resultSet.next()) {
+        if (row == -1) {
+            String email = jTextField1.getText();
+            String firstName = jTextField2.getText();
+            String lastName = jTextField3.getText();
+            String nic = jTextField4.getText();
+            String mobile = jTextField5.getText();
+            String password = String.valueOf(jPasswordField1.getPassword());
+            String gender = String.valueOf(jComboBox1.getSelectedItem());
+            String type = String.valueOf(jComboBox2.getSelectedItem());
 
-                    if (!resultSet.getString("email").equals(email)) {
-                        JOptionPane.showMessageDialog(this, "This Employee Mobile Number and NIC already Registed", "Warning", JOptionPane.WARNING_MESSAGE);
+            if (firstName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter First Name", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (lastName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter Last Name", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (nic.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (nic.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter NIC", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (mobile.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (!mobile.matches("^07[01245678]{1}[0-9]{7}$")) {
+                JOptionPane.showMessageDialog(this, "Please Enter Valid Mobile", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (password.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please Enter Password", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (gender.equals("Select")) {
+                JOptionPane.showMessageDialog(this, "Please Select Gender", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else if (type.equals("Select")) {
+                JOptionPane.showMessageDialog(this, "Please Select Type", "Warning", JOptionPane.WARNING_MESSAGE);
+            } else {
+
+                try {
+                    ResultSet resultSet = MySql.executeSearch("SELECT * FROM `employee` WHERE `nic` = '" + nic + "' OR `mobile` = '" + mobile + "' ");
+                    boolean canUpdate = false;
+
+                    if (resultSet.next()) {
+
+                        if (!resultSet.getString("email").equals(email)) {
+                            JOptionPane.showMessageDialog(this, "This Employee Mobile Number and NIC already Registed", "Warning", JOptionPane.WARNING_MESSAGE);
+
+                        } else {
+                            canUpdate = true;
+                        }
 
                     } else {
                         canUpdate = true;
                     }
 
-                } else {
-                    canUpdate = true;
-                }
+                    if (canUpdate) {
+                        MySql.executeIUD("UPDATE `employee` SET `password` = '" + password + "' , `first_name` = '" + firstName + "' , "
+                                + "`last_name` = '" + lastName + "' , `nic` = '" + nic + "' , `mobile` = '" + mobile + "' , `employee_type_id` = '" + typeMap.get(type) + "' , "
+                                + "`gender_id` = '" + genderMap.get(gender) + "' WHERE `email` = '" + email + "' ");
 
-                if (canUpdate) {
-                    MySql.executeIUD("UPDATE `employee` SET `password` = '" + password + "' , `first_name` = '" + firstName + "' , "
-                            + "`last_name` = '" + lastName + "' , `nic` = '" + nic + "' , `mobile` = '" + mobile + "' , `employee_type_id` = '" + typeMap.get(type) + "' , "
-                            + "`gender_id` = '" + genderMap.get(gender) + "' WHERE `email` = '"+email+"' ");
-                    
-                    
-                    loadEmployee();
-                    reset();
-                }
-            } catch (Exception e) {
+                        loadEmployee();
+                        reset();
+                    }
+                } catch (Exception e) {
 
-                e.printStackTrace();
+                    e.printStackTrace();
+
+                }
 
             }
-
+        } else {
+            JOptionPane.showMessageDialog(this, "Please Select Emploee Befor the Update");
         }
+
 
     }//GEN-LAST:event_jButton2ActionPerformed
 
