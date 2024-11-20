@@ -8,13 +8,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.MySql;
 
-public class AddressView extends javax.swing.JFrame {
+public class AddressView extends javax.swing.JDialog {
 
     private HashMap<String, String> cityMap = new HashMap<>();
 
     private String email;
 
-    public AddressView(String email1) {
+    public AddressView(java.awt.Frame parent, boolean modal, String email1) {
+        super(parent,modal);
         initComponents();
         jLabel5.setText(email1);
         this.email = email1;
@@ -89,7 +90,7 @@ public class AddressView extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setFont(new java.awt.Font("Poppins", 1, 14)); // NOI18N
         jLabel1.setText("Address View");
@@ -253,11 +254,30 @@ public class AddressView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please Select City", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
             try {
-                MySql.executeIUD("INSERT INTO `employee_address` (`line1`,`line2`,`city_id`,`employee_email`) "
-                        + "VALUES('" + line1 + "' , '" + line2 + "' , '" + cityMap.get(city) + "' , '" + this.email + "') ");
 
-                loadAddress();
-                reset();
+                boolean isFound = false;
+
+                for (int i = 0; i < jTable1.getRowCount(); i++) {
+                    String getLine1 = String.valueOf(jTable1.getValueAt(i, 1));
+                    String getLine2 = String.valueOf(jTable1.getValueAt(i, 2));
+                    String getCity = String.valueOf(jTable1.getValueAt(i, 3));
+
+                    if (getLine1.equals(line1) && getLine2.equals(line2) && getCity.equals(city)) {
+
+                        JOptionPane.showMessageDialog(this, "Address Already Added", "Warning", JOptionPane.WARNING_MESSAGE);
+                        isFound = true;
+                        break;
+
+                    }
+                }
+
+                if (!isFound) {
+                    MySql.executeIUD("INSERT INTO `employee_address` (`line1`,`line2`,`city_id`,`employee_email`) "
+                            + "VALUES('" + line1 + "' , '" + line2 + "' , '" + cityMap.get(city) + "' , '" + this.email + "') ");
+
+                    loadAddress();
+                    reset();
+                }
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -291,15 +311,36 @@ public class AddressView extends javax.swing.JFrame {
             } else if (city.equals("Select")) {
                 JOptionPane.showMessageDialog(this, "Please Select City", "Warning", JOptionPane.WARNING_MESSAGE);
             } else {
-                try {
-                    MySql.executeIUD("UPDATE `employee_address` SET `line1` = '" + line1 + "' , `line2` = '" + line2 + "' , `city_id` = '" + cityMap.get(city) + "' WHERE `employee_email` = '" + email + "' ");
+                 try {
+
+                boolean isFound = false;
+
+                for (int i = 0; i < jTable1.getRowCount(); i++) {
+                    String getLine1 = String.valueOf(jTable1.getValueAt(i, 1));
+                    String getLine2 = String.valueOf(jTable1.getValueAt(i, 2));
+                    String getCity = String.valueOf(jTable1.getValueAt(i, 3));
+
+                    if (getLine1.equals(line1) && getLine2.equals(line2) && getCity.equals(city)) {
+
+                        JOptionPane.showMessageDialog(this, "Address Already Added", "Warning", JOptionPane.WARNING_MESSAGE);
+                        isFound = true;
+                        break;
+
+                    }
+                }
+
+                if (!isFound) {
+                    MySql.executeIUD("UPDATE `employee_address` SET `line1` = '" + line1 + "' , "
+                            + "`line2` = '" + line2 + "' , `city_id` = '" + cityMap.get(city) + "' "
+                            + "WHERE `employee_email` = '" + email + "' ");
 
                     loadAddress();
                     reset();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             }
         }
 
