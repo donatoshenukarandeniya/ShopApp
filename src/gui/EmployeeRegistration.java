@@ -439,7 +439,7 @@ public class EmployeeRegistration extends javax.swing.JFrame {
         String email1 = String.valueOf(jTable1.getValueAt(row1, 0));
 
         if (evt.getClickCount() == 2) {
-            AddressView addressview = new AddressView(email1);
+            AddressView addressview = new AddressView(this,true,email1);
             addressview.setVisible(true);
         }
     }//GEN-LAST:event_jTable1MouseClicked
