@@ -21,6 +21,7 @@ public class AddressView extends javax.swing.JDialog {
         this.email = email1;
         loadCity();
         loadAddress();
+        
     }
 
     private void loadAddress() {
