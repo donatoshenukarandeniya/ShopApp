@@ -376,7 +376,11 @@ public class CustomerRegistration extends javax.swing.JFrame {
 
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
-        FlatMacDarkLaf.setup();
+        try{
+            FlatMacDarkLaf.setup();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
